@@ -7,7 +7,7 @@ class Pomodoro extends Component {
     state = {
         breakLength: 5,
         sessionLength: 25,
-        displayLength: '00:02',
+        displayLength: '25:00',
         isBreak: false,
         isPlaying: false,
         playBeep: false,
@@ -48,12 +48,18 @@ class Pomodoro extends Component {
         this.setState((state) => ({
             breakLength: 5,
             sessionLength: 25,
-            displayLength: '00:02',
+            displayLength: '25:00',
             isBreak: false,
             isPlaying: false,
             playBeep: false,
             reset: true
         }))
+        this.audioBeep.pause()
+        this.audioBeep.currentTime = 0;
+    }
+
+    audioBeep = () => {
+
     }
 
     handleCountDown = (e) => {
@@ -76,6 +82,10 @@ class Pomodoro extends Component {
 
             displayed = minutes + ":" + seconds
             console.log(minutes, seconds)
+
+            if (minutes ==='00' && seconds === '00'){
+                this.audioBeep.play();
+            }
 
             if (timer >= 0 && this.state.isPlaying) {
                 timer--;
@@ -127,7 +137,9 @@ class Pomodoro extends Component {
                     isPlaying={this.state.isPlaying}
                     handleReset={this.handleReset}
                 />
-                {this.state.playBeep ? <audio id="beep" src="http://www.soundjay.com/button/beep-07.wav" autoPlay={true}></audio> : ''}
+                <audio id="beep" preload="auto" 
+                    src="https://goo.gl/65cBl1"
+                    ref={(audio) => { this.audioBeep = audio; }} />
             </div>
         )
     }
